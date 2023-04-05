@@ -6,6 +6,9 @@ class Genre(models.Model):
     
     def __str__(self):
         return self.name
+    
+    class Meta:
+        db_table = 'genre'
 
 class Movie(models.Model):
     title = models.CharField(max_length=150)
@@ -19,3 +22,6 @@ class Movie(models.Model):
     
     def __str__(self):
         return self.title
+    
+    class Meta:
+        db_table = 'movie'
