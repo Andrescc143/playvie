@@ -18,7 +18,7 @@ class Movie(models.Model):
     release = models.DateField(auto_now=False, auto_now_add=False)
     language = models.CharField(max_length=15)
     adult = models.BooleanField(blank=True)
-    rate = models.DecimalField(max_digits=1, decimal_places=1)
+    rate = models.DecimalField(max_digits=2, decimal_places=1)
     votes = models.IntegerField()
     
     def __str__(self):
