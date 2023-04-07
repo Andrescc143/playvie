@@ -29,8 +29,13 @@ def get_genres_view(request):
     
     if data:
         if request.method == 'GET':
-            #Return the entire JSON list of genres gathered from the API
-            return Response(data, status=status.HTTP_200_OK)
+            genres = Genre.objects.all()
+            genres_serialized = GenreSerializer(genres, many=True)
+            
+            if genres:
+                #Return the JSON list of genres gathered from the DB
+                return Response(genres_serialized.data, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         elif request.method == 'POST':
             #Control variable to know the total number of genres saved correctly
             genres_created = 0
