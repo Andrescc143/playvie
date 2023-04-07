@@ -14,6 +14,7 @@ class Movie(models.Model):
     title = models.CharField(max_length=150)
     overview = models.TextField(blank=False)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    poster = models.CharField(max_length=120)
     release = models.DateField(auto_now=False, auto_now_add=False)
     language = models.CharField(max_length=15)
     adult = models.BooleanField(blank=True)
