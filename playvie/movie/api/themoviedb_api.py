@@ -13,12 +13,9 @@ def get_genre_data(api_key):
     else:
         return None
 
-def get_movie_data(api_key, page=None):
+def get_movie_data(api_key, page):
     endpoint = '/movie/popular'
-    url = base_url + endpoint + f'?api_key={api_key}'
-    
-    if page:
-        url = url + f'&page={page}'
+    url = base_url + endpoint + f'?api_key={api_key}' + f'&page={page}'
           
     response = requests.get(url)
     
