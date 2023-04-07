@@ -1,10 +1,12 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.pagination import PageNumberPagination
 
 from movie.api.themoviedb_api import get_genre_data, get_movie_data
 from movie.serializers.api_serializers import GenreSerializer, MovieSerializer
 from movie.models import Genre, Movie
+
 
 BASE_URL_MOVIE_POSTER = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2'
 API_KEY = '2212bc4709e02d211e84ffa8614e8c53'
@@ -12,12 +14,17 @@ GENRE_IDS ={28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'C
 
 @api_view(["GET", "POST"])
 def get_movies_view(request):
+    #to use the pagination featue in the response
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     
     if request.method == 'GET':
         movies = Movie.objects.all()
         
         if movies:
-            movies_serialized = MovieSerializer(movies, many=True)
+            #To add the paginaton to the results
+            paginated_queryset = paginator.paginate_queryset(movies, request)
+            movies_serialized = MovieSerializer(paginated_queryset, many=True)
             #Return the JSON list of movies gathered from the DB
             return Response(movies_serialized.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -77,15 +84,20 @@ def get_movies_view(request):
 
 @api_view(["GET", "POST"])
 def get_genres_view(request):
+    #to use the pagination featue in the response
+    paginator = PageNumberPagination()
+    paginator.page_size = 10
     
     data = get_genre_data(API_KEY)
     
     if data:
         if request.method == 'GET':
             genres = Genre.objects.all()
-            genres_serialized = GenreSerializer(genres, many=True)
             
             if genres:
+                #To add the paginaton to the results
+                paginated_queryset = paginator.paginate_queryset(genres, request)
+                genres_serialized = GenreSerializer(paginated_queryset, many=True)
                 #Return the JSON list of genres gathered from the DB
                 return Response(genres_serialized.data, status=status.HTTP_200_OK)
             return Response(status=status.HTTP_204_NO_CONTENT)
