@@ -9,7 +9,7 @@ from movie.models import Genre, Movie
 
 API_KEY = '2212bc4709e02d211e84ffa8614e8c53'
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def get_movies_view(request, page=None):
     
     data = get_movie_data(API_KEY, page)
