@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-7ikvy65$^m6aq4aq2ws&w35bp0-x8e$eq8y941%h4%e0-ib*&s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = [
+#     '192.168.1.6',
+#     '192.168.1.3',
+#     '192.168.1.8',
+#     'localhost'
+# ]
 
 
 # Application definition
@@ -41,9 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'movie',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,6 +64,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10
 }
+
+#CORS Configuration
+CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#        'http://localhost:4200',
+# )
 
 ROOT_URLCONF = 'playvie.urls'
 
