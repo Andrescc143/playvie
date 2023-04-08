@@ -2,10 +2,12 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.viewsets import ModelViewSet
 
 from movie.api.themoviedb_api import get_genre_data, get_movie_data
 from movie.serializers.api_serializers import GenreSerializer, MovieSerializer
-from movie.models import Genre, Movie
+from movie.serializers.app_serializers import PlaylistSerializer
+from movie.models import Genre, Movie, Playlist
 
 
 BASE_URL_MOVIE_POSTER = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2'
@@ -129,3 +131,8 @@ def get_genres_view(request):
     #In case no data is returned by the API, an error is raised.    
     return Response({"error":"An error was found using the API"},
                     status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class PlaylistViewSet(ModelViewSet):
+    queryset = Playlist.objects.all().order_by('id')
+    serializer_class = PlaylistSerializer
