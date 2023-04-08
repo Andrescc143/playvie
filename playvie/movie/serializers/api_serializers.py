@@ -8,6 +8,9 @@ class GenreSerializer(serializers.ModelSerializer):
         
         
 class MovieSerializer(serializers.ModelSerializer):
+    genre = serializers.StringRelatedField()
+    
     class Meta:
         model = Movie
+        ordering = ['id']
         fields = '__all__'

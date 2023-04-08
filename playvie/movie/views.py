@@ -19,7 +19,7 @@ def get_movies_view(request):
     paginator.page_size = 10
     
     if request.method == 'GET':
-        movies = Movie.objects.all()
+        movies = Movie.objects.all().order_by('id')
         
         if movies:
             #To add the paginaton to the results
@@ -92,7 +92,7 @@ def get_genres_view(request):
     
     if data:
         if request.method == 'GET':
-            genres = Genre.objects.all()
+            genres = Genre.objects.all().order_by('id')
             
             if genres:
                 #To add the paginaton to the results
