@@ -2,12 +2,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.viewsets import ModelViewSet
 
 from movie.api.themoviedb_api import get_genre_data, get_movie_data
 from movie.serializers.api_serializers import GenreSerializer, MovieSerializer
-from movie.serializers.app_serializers import PlaylistSerializer
-from movie.models import Genre, Movie, Playlist
+from movie.models import Genre, Movie
 
 
 BASE_URL_MOVIE_POSTER = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2'
@@ -41,6 +39,7 @@ def get_movies_view(request):
             movie_failures = 0
             for movie in api_data['results']:
                 try:
+                    print("aQUÍ MI PERRO: ", movie['title'])
                     Movie.objects.get(title=movie['title'])
                     pass
                 except Movie.DoesNotExist:
@@ -60,6 +59,7 @@ def get_movies_view(request):
                             'rate': movie['vote_average'],
                             'votes': movie['vote_count']
                         }
+                        print("Estoy aquí: ", movie_to_save)
                     except Exception as e:
                         #Raise an error in case the genre of the movie does not exist in the DB
                         print(f'An error ocurred when trying to format the data of the movie [{movie["title"]}]:  {str(e)}')
@@ -69,6 +69,7 @@ def get_movies_view(request):
                     movie_serialized = MovieSerializer(data=movie_to_save)
                     if movie_serialized.is_valid():
                         movie_serialized.save()
+                        print("Estoy aquí ahora ")
                         movies_created += 1
                     else:
                         return Response({'movie': f'{movie_to_save["title"]}',
@@ -120,9 +121,7 @@ def get_genres_view(request):
                     if genre_serializer.is_valid():
                         genre_serializer.save()
                         genres_created += 1
-                        print(f"Genre '{genre['name']}' saved correctly")
                     else:
-                        print(f"Error: Genre '{genre['name']}' could not be validated")
                         return Response(genre_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             #A confirmation message an a 201 code is returned after the for bucle is finished correctly
             return Response({'message': f'{genres_created} total genres created correctly',
@@ -130,19 +129,4 @@ def get_genres_view(request):
                 
     #In case no data is returned by the API, an error is raised.    
     return Response({"error":"An error was found using the API"},
-                    status=status.HTTP_400_BAD_REQUEST)
-    
-    
-class PlaylistViewSet(ModelViewSet):
-    queryset = Playlist.objects.all().order_by('id')
-    serializer_class = PlaylistSerializer
-    
-    def create(self, request):                     
-        serialized_playlist = self.serializer_class(data=request.data)
-        
-        if serialized_playlist.is_valid():
-            serialized_playlist.save()                
-            return Response({'message': 'Playlist created correctly', 'data': serialized_playlist.data}, status=status.HTTP_201_CREATED)
-        
-        return Response(serialized_playlist.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+                    status=status.HTTP_400_BAD_REQUEST)       

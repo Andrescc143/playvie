@@ -32,5 +32,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api/v1/movies/', include('movie.urls'))
+    path('api/v1/movies/', include('movie.urls')),
+    path('api/v1/playlists/', include('playlist.urls'))
 ]

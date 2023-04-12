@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from movie.models import Playlist
+from playlist.models import Playlist
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
