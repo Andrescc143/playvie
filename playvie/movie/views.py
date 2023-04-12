@@ -7,10 +7,8 @@ from movie.api.themoviedb_api import get_genre_data, get_movie_data
 from movie.serializers.api_serializers import GenreSerializer, MovieSerializer
 from movie.models import Genre, Movie
 
+from playvie.CONSTANTS import BASE_URL_MOVIE_POSTER, API_KEY, GENRE_IDS
 
-BASE_URL_MOVIE_POSTER = 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2'
-API_KEY = '2212bc4709e02d211e84ffa8614e8c53'
-GENRE_IDS ={28: 'Action', 12: 'Adventure', 16: 'Animation', 35: 'Comedy', 80: 'Crime', 99: 'Documentary', 18: 'Drama', 10751: 'Family', 14: 'Fantasy', 36: 'History', 27: 'Horror', 10402: 'Music', 9648: 'Mystery', 10749: 'Romance', 878: 'Science Fiction', 10770: 'TV Movie', 53: 'Thriller', 10752: 'War', 37: 'Western'}
 
 @api_view(["GET", "POST"])
 def get_movies_view(request):
@@ -81,6 +79,22 @@ def get_movies_view(request):
     return Response({"error":"No any page number was provided as query parameter. It is needed to know which subset of data will be retrieved. Check the API documentation for further information."},
                         status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET', 'PUT'])
+def get_movie_detail(request, pk=None):
+    movie = Movie.objects.get(id=pk)
+    if movie:
+        if request.method == 'GET':
+            movie_serialized = MovieSerializer(movie)
+            return Response(movie_serialized.data, status=status.HTTP_200_OK)
+        
+        #In case the request is PUT type
+        movie_serialized = MovieSerializer(instance=movie, data=request.data)        
+        if movie_serialized.is_valid():
+            movie_serialized.save()
+            return Response(movie_serialized.data, status=status.HTTP_200_OK)
+        return Response(movie_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    return Response({'error': "The movie doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["GET", "POST"])
 def get_genres_view(request):
