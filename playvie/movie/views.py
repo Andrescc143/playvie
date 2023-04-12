@@ -39,7 +39,6 @@ def get_movies_view(request):
             movie_failures = 0
             for movie in api_data['results']:
                 try:
-                    print("aQUÍ MI PERRO: ", movie['title'])
                     Movie.objects.get(title=movie['title'])
                     pass
                 except Movie.DoesNotExist:
@@ -59,7 +58,6 @@ def get_movies_view(request):
                             'rate': movie['vote_average'],
                             'votes': movie['vote_count']
                         }
-                        print("Estoy aquí: ", movie_to_save)
                     except Exception as e:
                         #Raise an error in case the genre of the movie does not exist in the DB
                         print(f'An error ocurred when trying to format the data of the movie [{movie["title"]}]:  {str(e)}')
@@ -69,7 +67,6 @@ def get_movies_view(request):
                     movie_serialized = MovieSerializer(data=movie_to_save)
                     if movie_serialized.is_valid():
                         movie_serialized.save()
-                        print("Estoy aquí ahora ")
                         movies_created += 1
                     else:
                         return Response({'movie': f'{movie_to_save["title"]}',
