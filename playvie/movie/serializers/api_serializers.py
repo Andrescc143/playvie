@@ -22,6 +22,7 @@ class MovieSerializer(serializers.ModelSerializer):
             'genre': instance.genre.name,
             'poster': instance.poster,
             'release': instance.release,
+            'language': instance.language,
             'adult': instance.adult,
             'rate': instance.rate,
             'votes': instance.votes
