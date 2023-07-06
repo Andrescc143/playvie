@@ -134,9 +134,15 @@ def get_genres_view(request):
                         genres_created += 1
                     else:
                         return Response(genre_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            #A confirmation message an a 201 code is returned after the for bucle is finished correctly
-            return Response({'message': f'{genres_created} total genres created correctly',
-                             }, status=status.HTTP_201_CREATED)
+            #A confirmation message with a 201 code is returned after the for bucle is finished correctly and only if any new genre is created
+            if genres_created:
+                response_status = status.HTTP_201_CREATED
+            else:
+                response_status = status.HTTP_200_OK
+            
+            return Response({'message': f'{genres_created} total genres created',
+                             }, response_status)
+            
                 
     #In case no data is returned by the API, an error is raised.    
     return Response({"error":"An error was found using the API"},
