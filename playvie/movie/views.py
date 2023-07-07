@@ -70,9 +70,14 @@ def get_movies_view(request):
                         return Response({'movie': f'{movie_to_save["title"]}',
                                             'errors': movie_serialized.errors}, status=status.HTTP_400_BAD_REQUEST)
             #Confirmation message in case all the for cycle could be executed correctly
+            if movies_created:
+                response_status = status.HTTP_201_CREATED
+            else:
+                response_status = status.HTTP_200_OK
+                
             return Response({'message': f'{movies_created} total movies created correctly.',
                              'errors': f'{movie_failures}',
-                             }, status=status.HTTP_201_CREATED)  
+                             }, status=response_status)  
         #Error raised in case no data is retrieved from the API
         return Response({"error":"An error was found using the API"},
                         status=status.HTTP_400_BAD_REQUEST)
