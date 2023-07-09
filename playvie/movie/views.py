@@ -86,20 +86,21 @@ def get_movies_view(request):
 
 @api_view(['GET', 'PUT'])
 def get_movie_detail(request, pk=None):
-    movie = Movie.objects.get(id=pk)
-    if movie:
-        if request.method == 'GET':
-            movie_serialized = MovieSerializer(movie)
-            return Response(movie_serialized.data, status=status.HTTP_200_OK)
-        
-        #In case the request is PUT type
-        movie_serialized = MovieSerializer(instance=movie, data=request.data)        
-        if movie_serialized.is_valid():
-            movie_serialized.save()
-            return Response(movie_serialized.data, status=status.HTTP_200_OK)
-        return Response(movie_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    return Response({'error': "The movie doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        movie = Movie.objects.get(id=pk)
+        if movie:
+            if request.method == 'GET':
+                movie_serialized = MovieSerializer(movie)
+                return Response(movie_serialized.data, status=status.HTTP_200_OK)
+            
+            #In case the request is PUT type
+            movie_serialized = MovieSerializer(instance=movie, data=request.data)        
+            if movie_serialized.is_valid():
+                movie_serialized.save()
+                return Response(movie_serialized.data, status=status.HTTP_200_OK)
+            return Response(movie_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Movie.DoesNotExist:
+        return Response({'error': "The movie doesn't exist"}, status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["GET", "POST"])
 def get_genres_view(request):
