@@ -53,7 +53,7 @@ def get_movies_view(request):
                             'release': movie['release_date'],
                             'language': movie['original_language'],
                             'adult': movie['adult'],
-                            'rate': movie['vote_average'],
+                            'rate': round(movie['vote_average'],1),
                             'votes': movie['vote_count']
                         }
                     except Exception as e:
